@@ -6,4 +6,9 @@ then
 	exit 1
 fi
 
-echo `iptables -L -v -n | grep "$@" | grep DROP` > /dev/null && echo "$@ will be dropped"
+if [ "$(echo `iptables -L -v -n | grep "$@" | grep DROP`)" ]
+then
+	echo "$@ will be dropped"
+else
+	echo "$@ will not be dropped"
+fi
