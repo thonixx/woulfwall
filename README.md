@@ -19,12 +19,17 @@ To use the restore script please create the iptables.up.rules with "iptables-sav
 
 ###failed-logins.sh
 >	Parse auth.log for failed logins and list. You can define  
-	a threshold value.
+	a threshold value. Also you can write "rev" as second parameter  
+	to show the reverse entry of an IP address.
 
     Example:  
         ./failed-logins.sh 5  
         Just show failed logins if failed 5 times  
         Default value is 10.
+          
+        ./failed-logins.sh 1 rev
+        Show all more than 1 times failed logins with  
+        a corresponding reverse DNS entry.
 
 ###block.sh
 >	Define an IP to block.

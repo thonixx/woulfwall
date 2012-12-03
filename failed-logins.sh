@@ -12,15 +12,38 @@ else
 	threshold=$1
 fi
 
+# get value for reverse lookup
+if [ "$2" == "rev" ]
+then
+	reverse=true
+	revtext="Reverse"
+	revstar="*******"
+else
+	reverse=false
+	revtext=""
+	revstart=""
+fi
+
 # list all failed ips
 list=$(grep Failed /var/log/auth.log | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' | sort -n | uniq -c | sort -n)
 
 echo ""
-printf "  %10s   %s\n" "Counter" "IP address"
+# printf used for column thing
+printf "  %10s   %-40s %s\n" "Counter" "IP address" "$revtext"
+printf "  %10s   %-40s %s\n" "*******" "**********" "$revstar"
 for ipl in $list
 do
 	# take the IP
 	ipaddr=$(echo $ipl | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}')
+
+	# give me the reverse output
+	ipreverse=$(host $ipaddr | head -n 1 | awk '{print $5}')
+	
+	# check the reverse output
+	if [ "$ipreverse" == "3(NXDOMAIN)" ]
+	then
+		ipreverse="No reverse entry specified"
+	fi
 	
 	# take the counter
 	counter=$(echo $ipl | awk -F\  '{print $1}')
@@ -30,9 +53,19 @@ do
 		# check if IP will be dropped
 		if [ "$(iptables -L -v -n | grep $ipaddr | grep DROP)" ]
 		then
-			printf "  %10s   %s\n" "$counter" "$ipaddr (blocked)"
+			if [ $reverse == true ]
+			then
+				printf "  %10s   %-40s %s\n" "$counter" "$ipaddr (blocked)" "$ipreverse"
+			else
+				printf "  %10s   %-40s\n" "$counter" "$ipaddr (blocked)"
+			fi
 		else
-			printf "  %10s   %s\n" "$counter" "$ipaddr (not yet blocked)"
+			if [ $reverse == true ]
+			then
+				printf "  %10s   %-40s %s\n" "$counter" "$ipaddr (not yet blocked)" "$ipreverse"
+			else
+				printf "  %10s   %-40s\n" "$counter" "$ipaddr (not yet blocked)"
+			fi
 		fi
 	fi
 done
