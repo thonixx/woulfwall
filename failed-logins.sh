@@ -36,14 +36,19 @@ do
 	# take the IP
 	ipaddr=$(echo $ipl | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}')
 
-	# give me the reverse output
-	ipreverse=$(host $ipaddr | head -n 1 | awk '{print $5}')
-	
-	# check the reverse output
-	if [ "$ipreverse" == "3(NXDOMAIN)" ]
+        # give me the reverse output
+	if [ "`which resolveip`" ]
 	then
-		ipreverse="No reverse entry specified"
+		ipreverse=$(resolveip -s $ipaddr 2> /dev/null)
+	else
+		ipreverse="No \"resolveip\" installed."
 	fi
+        
+        # check the reverse output
+        if [ -z "$ipreverse" ]
+        then
+                ipreverse="No reverse entry specified"
+        fi
 	
 	# take the counter
 	counter=$(echo $ipl | awk -F\  '{print $1}')
@@ -62,9 +67,9 @@ do
 		else
 			if [ $reverse == true ]
 			then
-				printf "  %10s   %-40s %s\n" "$counter" "$ipaddr (not yet blocked)" "$ipreverse"
+				printf "  %10s   %-40s %s\n" "$counter" "$ipaddr" "$ipreverse"
 			else
-				printf "  %10s   %-40s\n" "$counter" "$ipaddr (not yet blocked)"
+				printf "  %10s   %-40s\n" "$counter" "$ipaddr"
 			fi
 		fi
 	fi
