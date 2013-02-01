@@ -9,4 +9,9 @@ do
 	sleep 1
 done
 
-./geoblock.sh
+# give me script name
+script=$(basename $0)
+# give me directory where script is in and remove script name
+dir=$(echo $0 | sed -e "s/$script//g")
+
+"$dir"geoblock.sh
