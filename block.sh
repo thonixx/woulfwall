@@ -12,6 +12,14 @@ then
 	# write to custom ranges file for restore
 	echo "$ip" >> "$dir"iptables.ranges
 
+	# check if ip already in block list
+	blockfile="$dir"iptables.ranges
+	if [ ! -z "$(grep $ip $blockfile)" ]
+	then
+		echo "it seems that the ip already is in blocklist"
+		exit 1
+	fi
+
 	# go through the ports which should be blocked instead of total block
 	for port in 22 25 465 993 995
 	do
