@@ -9,8 +9,6 @@ if [ "$(echo $@ | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}
 then
 	# simple test for ip
 	ip=$(echo $@ | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}')
-	# write to custom ranges file for restore
-	echo "$ip" >> "$dir"iptables.ranges
 
 	# check if ip already in block list
 	blockfile="$dir"iptables.ranges
@@ -18,6 +16,9 @@ then
 	then
 		echo "it seems that the ip already is in blocklist"
 		exit 1
+	else
+		# write to custom ranges file for restore
+		echo "$ip" >> "$dir"iptables.ranges
 	fi
 
 	# go through the ports which should be blocked instead of total block
