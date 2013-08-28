@@ -1,5 +1,7 @@
 #!/bin/sh
-iptables-restore < iptables.up.rules && echo "restored iptables rules"
+dir="$(dirname $0)"
+
+iptables-restore < "$dir"/iptables.up.rules && echo "restored iptables rules"
 echo ""
 echo "**** NOW THE GEOBLOCK/RANGES FILE ****"
 echo ""
