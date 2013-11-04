@@ -2,21 +2,22 @@
 dir="$(dirname $0)"
 
 iptables-restore < "$dir"/iptables.up.rules && echo "restored iptables rules"
+
+# skip geoblock per default
+if [ "$1" != "geoblock" ]
+then
+        echo "no geoblock"
+        exit 0
+fi
+
 echo ""
 echo "**** NOW THE GEOBLOCK/RANGES FILE ****"
 echo ""
 for i in `seq 1 5`
 do
-	echo -n "$i .. "
-	sleep 1
+        echo -n "$i .. "
+        sleep 1
 done
-
-# skip geoblock per default
-if [ ! "$1" == "geoblock" ]
-then
-	echo "no geoblock"
-	exit 0
-fi
 
 # give me script name
 script=$(basename $0)
