@@ -13,6 +13,7 @@ done
 
 # skip geoblock per default
 if [ ! "$1" == "geoblock" ]
+then
 	echo "no geoblock"
 	exit 0
 fi
