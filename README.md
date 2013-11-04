@@ -1,9 +1,15 @@
 #woulfwall
 Scripts used for iptable thingies.
 
-##Notice:
-To use the restore script please create the iptables.up.rules with "iptables-save > iptables.up.rules".
+##Prepare the environment:
+To use the restore script please create the iptables.up.rules with **"iptables-save > iptables.up.rules"**.
+For the first time it is recommended to hard link the iptables rules from **"/path/to/git/iptables.up.rules"** to **"/etc/iptables.up.rules"**.
+After that you can add the following line to the network interfaces configuration to ensure iptables restore at interface start:
 
+    auto eth0  
+        iface [...]  
+        [...]  
+        post-up iptables-restore < /etc/iptables.up.rules
 
 ##Scripts:
 
