@@ -11,6 +11,12 @@ do
 	sleep 1
 done
 
+# skip geoblock per default
+if [ ! "$1" == "geoblock" ]
+	echo "no geoblock"
+	exit 0
+fi
+
 # give me script name
 script=$(basename $0)
 # give me directory where script is in and remove script name
